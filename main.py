@@ -1,6 +1,9 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+
+
 
 # URL of the NOAA directory page you want to scrape
 url = "https://www.ncei.noaa.gov/data/local-climatological-data/access/2021/"
@@ -72,7 +75,9 @@ print(f"File URL: {file_url}")
 
 #download the file and check if link is valid
 response= requests.get(file_url,stream=True,timeout=10)
-if response.status_code == 200:
+if file_name.endswith(".csv") and os.path.exists(file_name):
+    print(f"File '{file_name}' already exists. Skipping download.")
+elif response.status_code == 200:
     with open(file_name, "wb") as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
