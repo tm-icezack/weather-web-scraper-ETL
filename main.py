@@ -79,3 +79,24 @@ if response.status_code == 200:
     print(f"File '{file_name}' downloaded successfully.")
 else:
     print(f"failed to download file:{response.status_code}")    
+
+#read the downloaded file and display the first 5 rows
+# since the file is in csv format, we can use pandas to read it
+
+try:
+    df_weather = pd.read_csv(file_name)
+    print(df_weather.head())
+except Exception as e:
+    print(f"Error reading the file: {e}")    
+
+
+ #clean tempreture data
+df_weather["HourlyDryBulbTemperature"] = pd.to_numeric(df_weather["HourlyDryBulbTemperature"],errors="coerce")
+
+# get hottest temperature recorded in the file
+hottest_temp = df_weather["HourlyDryBulbTemperature"].max()
+print(f"Hottest temperature recorded: {hottest_temp} ")
+
+hottest_record = df_weather.loc[df_weather["HourlyDryBulbTemperature"] == hottest_temp]
+#display the record with the hottest temperature
+print(hottest_record)
